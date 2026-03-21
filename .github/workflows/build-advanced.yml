@@ -1,0 +1,125 @@
+name: Build Android APK (Advanced)
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_profile:
+        description: 'EAS Build Profile'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        working-directory: ./mobile-app
+        run: npm ci
+
+      - name: Get package version
+        id: version
+        working-directory: ./mobile-app
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Build APK
+        working-directory: ./mobile-app
+        run: |
+          eas build --platform android --profile ${{ inputs.build_profile || 'preview' }} --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Wait for build (polling)
+        working-directory: ./mobile-app
+        run: |
+          echo "⏳ Waiting for build to complete..."
+          echo "This may take 15-25 minutes..."
+          
+          # 获取最新的构建 ID（通过 Expo CLI）
+          BUILD_ID=$(eas build:list --limit 1 --json | jq -r '.[0].id')
+          echo "Build ID: $BUILD_ID"
+          
+          # 轮询构建状态
+          while true; do
+            STATUS=$(eas build:view $BUILD_ID --json | jq -r '.status')
+            echo "Current status: $STATUS"
+            
+            if [ "$STATUS" = "finished" ]; then
+              echo "✅ Build completed!"
+              break
+            elif [ "$STATUS" = "errored" ] || [ "$STATUS" = "canceled" ]; then
+              echo "❌ Build failed!"
+              exit 1
+            fi
+            
+            echo "⏳ Waiting 60 seconds..."
+            sleep 60
+          done
+
+      - name: Download APK
+        working-directory: ./mobile-app
+        run: |
+          # 获取构建产物 URL
+          ARTIFACT_URL=$(eas build:view $(eas build:list --limit 1 --json | jq -r '.[0].id') --json | jq -r '.artifacts.buildUrl')
+          echo "Download URL: $ARTIFACT_URL"
+          
+          # 下载 APK
+          curl -L -o selfmedia-app.apk "$ARTIFACT_URL"
+          echo "✅ APK downloaded!"
+
+      - name: Upload APK to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: selfmedia-app-${{ steps.version.outputs.version }}.apk
+          path: mobile-app/selfmedia-app.apk
+          retention-days: 30
+
+      - name: Create GitHub Release (if tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mobile-app/selfmedia-app.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify build status
+        run: |
+          echo "==================================="
+          echo "✅ Build completed successfully!"
+          echo "==================================="
+          echo "📱 App Version: ${{ steps.version.outputs.version }}"
+          echo "🔗 Build URL: https://expo.dev/accounts/lindons/projects/selfmedia-app/builds"
+          echo "📦 APK: Check Actions artifacts or Releases"
+          echo "==================================="

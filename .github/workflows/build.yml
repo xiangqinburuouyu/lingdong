@@ -1,0 +1,69 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        working-directory: ./mobile-app
+        run: npm ci
+
+      - name: Create .env file
+        working-directory: ./mobile-app
+        run: |
+          echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> .env
+
+      - name: Build APK
+        working-directory: ./mobile-app
+        run: eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Wait for build to complete
+        working-directory: ./mobile-app
+        run: |
+          echo "Build submitted! Check the Expo dashboard for progress."
+          echo "https://expo.dev/accounts/lindons/projects/selfmedia-app/builds"
+
+      - name: Upload build info
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: |
+            mobile-app/package.json
+            mobile-app/app.json
+          retention-days: 30
+
+      - name: Notify build status
+        run: |
+          echo "✅ Build submitted successfully!"
+          echo "📱 Check progress at: https://expo.dev/accounts/lindons/projects/selfmedia-app/builds"
+          echo "⏱️  Estimated time: 15-25 minutes"
