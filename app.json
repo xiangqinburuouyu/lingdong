@@ -2,7 +2,7 @@
   "expo": {
     "name": "自媒体博客",
     "slug": "selfmedia-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -35,15 +35,17 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": [],
     "scheme": "selfmedia",
     "extra": {
       "apiBaseUrl": "http://localhost:3000/api",
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "your-project-id-here"
+        "projectId": "48be1fcb-e5ca-4775-a7c0-7232b672ae5e"
       }
-    }
+    },
+    "owner": "lindons"
   }
 }
