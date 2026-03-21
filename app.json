@@ -2,7 +2,7 @@
   "expo": {
     "name": "自媒体博客",
     "slug": "selfmedia-app",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.selfmedia.app",
-      "buildNumber": "1.0.2"
+      "buildNumber": "1.0.3"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +25,7 @@
         "backgroundColor": "#0066FF"
       },
       "package": "com.selfmedia.app",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE"
@@ -38,7 +38,10 @@
     "plugins": [],
     "scheme": "selfmedia",
     "extra": {
-      "apiBaseUrl": "http://localhost:3000/api"
+      "apiBaseUrl": "http://localhost:3000/api",
+      "eas": {
+        "projectId": "48be1fcb-e5ca-4775-a7c0-7232b672ae5e"
+      }
     },
     "owner": "lindons"
   }
