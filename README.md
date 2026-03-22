@@ -1,2 +1,2 @@
-# lingdong.github.com
-lingdong project
+# selfmedia-app，.github.com
+selfmedia-app project
