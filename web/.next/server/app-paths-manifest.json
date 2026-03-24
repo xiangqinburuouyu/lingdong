@@ -1,0 +1,20 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/article/[id]/page": "app/article/[id]/page.js",
+  "/category/[slug]/page": "app/category/[slug]/page.js",
+  "/login/page": "app/login/page.js",
+  "/newsflash/page": "app/newsflash/page.js",
+  "/page": "app/page.js",
+  "/search/page": "app/search/page.js",
+  "/video/page": "app/video/page.js",
+  "/admin/articles/[id]/edit/page": "app/admin/articles/[id]/edit/page.js",
+  "/admin/articles/[id]/view/page": "app/admin/articles/[id]/view/page.js",
+  "/admin/articles/new/page": "app/admin/articles/new/page.js",
+  "/admin/articles/page": "app/admin/articles/page.js",
+  "/admin/categories/page": "app/admin/categories/page.js",
+  "/admin/comments/page": "app/admin/comments/page.js",
+  "/admin/newsflash/page": "app/admin/newsflash/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/settings/page": "app/admin/settings/page.js",
+  "/admin/users/page": "app/admin/users/page.js"
+}
