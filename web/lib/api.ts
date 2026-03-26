@@ -2,7 +2,7 @@ import axios from 'axios';
 import { mockAuth } from './mockAuth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-const USE_MOCK = true; // 使用模拟数据
+const USE_MOCK = false; // 使用模拟数据
 
 const api = axios.create({
   baseURL: API_BASE_URL,

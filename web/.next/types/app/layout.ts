@@ -1,4 +1,4 @@
-// File: /home/admin/openclaw/workspace/temp/自媒体 APP/web/app/layout.tsx
+// File: /opt/selfmedia-app/web/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
