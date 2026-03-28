@@ -169,11 +169,11 @@ export default function CommentsPage() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-3 flex-1">
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                  <span className="text-gray-600 font-bold">{comment.user.username[0]}</span>
+                  <span className="text-gray-600 font-bold">{comment?.user?.username?.[0]}</span>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    <span className="font-medium text-gray-900">{comment.user.username}</span>
+                    <span className="font-medium text-gray-900">{comment?.user?.username}</span>
                     <span className="text-gray-400">评论了</span>
                     <button
                       onClick={() => handleViewArticle(comment.article.id)}
@@ -262,7 +262,7 @@ export default function CommentsPage() {
             </p>
             <div className="bg-gray-50 rounded-lg p-3 mb-4">
               <p className="text-sm text-gray-700">{deletingComment.content}</p>
-              <p className="text-xs text-gray-500 mt-2">用户：{deletingComment.user.username}</p>
+              <p className="text-xs text-gray-500 mt-2">用户：{deletingComment?.user?.username}</p>
             </div>
             <p className="text-sm text-red-600 mb-6">
               ⚠️ 此操作不可恢复！

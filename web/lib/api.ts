@@ -2,7 +2,7 @@ import axios from 'axios';
 import { mockAuth } from './mockAuth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-const USE_MOCK = false; // 使用模拟数据
+const USE_MOCK = false;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// 请求拦截器 - 添加 token
+// 请求拦截器
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -24,7 +24,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 响应拦截器 - 处理错误
+// 响应拦截器
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -36,48 +36,36 @@ api.interceptors.response.use(
   }
 );
 
-// API 接口定义
+// API 接口
 export const articleApi = {
-  // 获取文章列表
-  getList: (params?: { page?: number; limit?: number; category?: string }) =>
-    api.get('/articles', { params }),
-  
-  // 获取文章详情
-  getDetail: (id: number) =>
-    api.get(`/articles/${id}`),
-  
-  // 获取热门文章
-  getHot: (limit?: number) =>
-    api.get('/articles/hot', { params: { limit } }),
-  
-  // 搜索文章
-  search: (keyword: string, page?: number) =>
-    api.get('/articles/search', { params: { keyword, page } }),
+  getList: (params?: { page?: number; limit?: number; category?: string }) => api.get('/articles', { params }),
+  getDetail: (id: number) => api.get(`/articles/${id}`),
+  getHot: (limit?: number) => api.get('/articles/hot', { params: { limit } }),
+  search: (keyword: string, page?: number) => api.get('/articles/search', { params: { keyword, page } }),
 };
 
 export const categoryApi = {
-  // 获取所有分类
-  getAll: () =>
-    api.get('/categories'),
-  
-  // 获取分类下的文章
-  getArticles: (slug: string, params?: { page?: number; limit?: number }) =>
-    api.get(`/categories/${slug}/articles`, { params }),
+  getAll: () => api.get('/categories'),
+  getArticles: (slug: string, params?: { page?: number; limit?: number }) => api.get(`/categories/${slug}/articles`, { params }),
 };
 
 export const newsFlashApi = {
-  // 获取快讯列表
-  getList: (limit?: number) =>
-    api.get('/newsflash', { params: { limit } }),
+  getList: (limit?: number) => api.get('/newsflash', { params: { limit } }),
 };
 
 export const userApi = {
-  // 登录
+  // 登录 - 发送 identifier 字段
   login: async (data: { username: string; password: string }) => {
     if (USE_MOCK) {
       return mockAuth.login(data);
     }
-    return api.post('/auth/login', data);
+    console.log('🔐 发送登录请求:', { identifier: data.username });
+    const response = await api.post('/auth/login', { 
+      identifier: data.username, 
+      password: data.password 
+    });
+    console.log('✅ 登录响应:', response);
+    return response;
   },
   
   // 注册
@@ -115,8 +103,7 @@ export const userApi = {
   },
   
   // 获取收藏列表
-  getFavorites: (page?: number) =>
-    api.get('/user/favorites', { params: { page } }),
+  getFavorites: (page?: number) => api.get('/user/favorites', { params: { page } }),
   
   // 发表评论
   comment: async (articleId: number, content: string) => {

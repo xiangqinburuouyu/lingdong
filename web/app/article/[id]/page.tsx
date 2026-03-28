@@ -235,11 +235,11 @@ export default function ArticlePage() {
             {comments.map((comment) => (
               <div key={comment.id} className="flex gap-3 border-b border-gray-100 pb-4 last:border-0">
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                  <span className="text-gray-600 font-medium">{comment.user.username[0]}</span>
+                  <span className="text-gray-600 font-medium">{comment?.user?.username?.[0]}</span>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-gray-900">{comment.user.username}</span>
+                    <span className="font-medium text-gray-900">{comment?.user?.username}</span>
                     <span className="text-sm text-gray-400">{formatTime(comment.publishTime)}</span>
                   </div>
                   <p className="text-gray-700">{comment.content}</p>

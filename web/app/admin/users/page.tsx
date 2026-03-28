@@ -44,8 +44,8 @@ export default function UsersPage() {
       return;
     }
     
-    const action = user.status === 'active' ? '禁用' : '启用';
-    const confirmed = window.confirm(`确定要${action}用户"${user.username}"吗？`);
+    const action = user?.status === 'active' ? '禁用' : '启用';
+    const confirmed = window.confirm(`确定要${action}用户"${user?.username}"吗？`);
     if (!confirmed) {
       console.log('Cancelled');
       return;
@@ -66,7 +66,7 @@ export default function UsersPage() {
     });
     
     setActionLoading(null);
-    setToastMessage(`用户"${user.username}"已${action}`);
+    setToastMessage(`用户"${user?.username}"已${action}`);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
@@ -93,8 +93,8 @@ export default function UsersPage() {
   };
 
   const filteredUsers = users.filter(user =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    user?.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user?.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const activeCount = users.filter(u => u.status === 'active').length;
@@ -147,32 +147,32 @@ export default function UsersPage() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {filteredUsers.map((user) => (
-              <tr key={user.id} className={`hover:bg-gray-50 transition-colors ${
-                actionLoading === user.id ? 'opacity-50' : ''
+              <tr key={user?.id} className={`hover:bg-gray-50 transition-colors ${
+                actionLoading === user?.id ? 'opacity-50' : ''
               }`}>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                      <span className="text-primary-600 font-bold">{user.username[0]}</span>
+                      <span className="text-primary-600 font-bold">{user?.username?.[0]}</span>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{user.username}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
+                      <p className="text-sm font-medium text-gray-900">{user?.username}</p>
+                      <p className="text-sm text-gray-500">{user?.email}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    user.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-600'
+                    user?.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-600'
                   }`}>
-                    {user.role === 'admin' ? '管理员' : '普通用户'}
+                    {user?.role === 'admin' ? '管理员' : '普通用户'}
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    user.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                    user?.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
                   }`}>
-                    {user.status === 'active' ? '正常' : '已禁用'}
+                    {user?.status === 'active' ? '正常' : '已禁用'}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">{user.registerTime}</td>
@@ -186,13 +186,13 @@ export default function UsersPage() {
                     >
                       <span>👁️</span> 查看
                     </button>
-                    {user.status === 'active' ? (
+                    {user?.status === 'active' ? (
                       <button 
-                        onClick={() => handleToggleStatus(user.id)}
+                        onClick={() => handleToggleStatus(user?.id)}
                         disabled={actionLoading !== null}
                         className="text-red-600 hover:text-red-800 text-sm font-medium px-3 py-1 rounded hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                       >
-                        {actionLoading === user.id ? (
+                        {actionLoading === user?.id ? (
                           <><span className="animate-spin">⏳</span> 处理中...</>
                         ) : (
                           <><span>🚫</span> 禁用</>
@@ -200,11 +200,11 @@ export default function UsersPage() {
                       </button>
                     ) : (
                       <button 
-                        onClick={() => handleToggleStatus(user.id)}
+                        onClick={() => handleToggleStatus(user?.id)}
                         disabled={actionLoading !== null}
                         className="text-green-600 hover:text-green-800 text-sm font-medium px-3 py-1 rounded hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                       >
-                        {actionLoading === user.id ? (
+                        {actionLoading === user?.id ? (
                           <><span className="animate-spin">⏳</span> 处理中...</>
                         ) : (
                           <><span>✅</span> 启用</>
